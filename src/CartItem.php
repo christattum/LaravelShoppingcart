@@ -69,7 +69,7 @@ class CartItem implements Arrayable, Jsonable
      *
      * @param int|string $id
      * @param string     $name
-     * @param float      $price
+     * @param int        $price (in pence/cents)
      * @param array      $options
      */
     public function __construct($id, $name, $price, array $options = [])
@@ -86,7 +86,7 @@ class CartItem implements Arrayable, Jsonable
 
         $this->id       = $id;
         $this->name     = $name;
-        $this->price    = floatval($price);
+        $this->price    = intval($price);
         $this->options  = new CartItemOptions($options);
         $this->rowId = $this->generateRowId($id, $options);
     }
@@ -367,7 +367,7 @@ class CartItem implements Arrayable, Jsonable
     /**
      * Get the formatted number.
      *
-     * @param float  $value
+     * @param int    $value
      * @param int    $decimals
      * @param string $decimalPoint
      * @param string $thousandSeperator
@@ -375,6 +375,9 @@ class CartItem implements Arrayable, Jsonable
      */
     private function numberFormat($value, $decimals, $decimalPoint, $thousandSeperator)
     {
+
+        $value = floatval($value) / 100;
+
         if (is_null($decimals)){
             $decimals = is_null(config('cart.format.decimals')) ? 2 : config('cart.format.decimals');
         }

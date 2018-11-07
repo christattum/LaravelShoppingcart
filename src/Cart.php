@@ -82,7 +82,7 @@ class Cart
      * @param mixed     $id
      * @param mixed     $name
      * @param int|float $qty
-     * @param float     $price
+     * @param int       $price (pence/cents)
      * @param array     $options
      * @return \Gloudemans\Shoppingcart\CartItem
      */
@@ -533,6 +533,8 @@ class Cart
      */
     private function numberFormat($value, $decimals, $decimalPoint, $thousandSeperator)
     {
+       $value = floatval($value) / 100;
+
         if(is_null($decimals)){
             $decimals = is_null(config('cart.format.decimals')) ? 2 : config('cart.format.decimals');
         }
@@ -545,4 +547,32 @@ class Cart
 
         return number_format($value, $decimals, $decimalPoint, $thousandSeperator);
     }
+
+    /**
+     * Format money
+     *
+     * @param $money
+     * @param $decimals
+     * @param $decimalPoint
+     * @param $thousandSeperator
+     * @return string
+     */
+    public static function formatMoney($money, $decimals=null, $decimalPoint=null, $thousandSeperator=null)
+    {
+        $value = floatval($money) / 100;
+        
+        if(is_null($decimals)){
+            $decimals = is_null(config('cart.format.decimals')) ? 2 : config('cart.format.decimals');
+        }
+        if(is_null($decimalPoint)){
+            $decimalPoint = is_null(config('cart.format.decimal_point')) ? '.' : config('cart.format.decimal_point');
+        }
+        if(is_null($thousandSeperator)){
+            $thousandSeperator = is_null(config('cart.format.thousand_seperator')) ? ',' : config('cart.format.thousand_seperator');
+        }
+
+        return number_format($value, $decimals, $decimalPoint, $thousandSeperator);
+    }
+
+
 }
